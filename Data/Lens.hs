@@ -1,5 +1,7 @@
 module Data.Lens
   ( module Data.Lens.Common
+  -- * Reader API
+  , summon         -- getter -- :: MonadReader a m => Lens a b -> m b
   -- * State API
   , access         -- getter -- :: MonadState a m => Lens a b -> m b
   , (~=), (!=)     -- setter -- :: MonadState a m => Lens a b -> b -> m b
@@ -15,10 +17,18 @@ module Data.Lens
   ) where
 
 import Control.Comonad.Trans.Store
+import Control.Monad.Reader
 import Control.Monad.State
 import Data.Functor.Identity
 import Data.Lens.Common
 import Data.Lens.Lazy (focus)
+
+-- * Reader actions
+
+-- | get the value of a lens into reader
+summon :: MonadReader a m => Lens a b -> m b
+summon (Lens f) = asks (pos . f)
+{-# INLINE summon #-}
 
 -- * State actions
 
